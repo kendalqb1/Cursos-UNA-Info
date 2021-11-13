@@ -7,19 +7,16 @@ const tbody_modal = document.querySelector("#tbody-modal");
 const llenarTabla = () => {
   for (const curso of cursos) {
     tbody.innerHTML += `
-    <td>${curso.codigo}</td>
-    <td>${curso.nombre}</td>
-    <td>${curso.creditos}</td>
-    <td>${curso.requisitos}</td>
-    <td>${curso.ciclo}</td>
-    <td>${curso.bachillerato === 0 ? "No" : "Si"}</td>
-    <td>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="${
-          curso.codigo
-        }" id="aprobado">
-      </div>
-    </td>`;
+    <tr class="row_table" value=${curso.codigo}>
+      <td>${curso.codigo}</td>
+      <td>${curso.nombre}</td>
+      <td>${curso.creditos}</td>
+      <td>${curso.requisitos}</td>
+      <td>${curso.ciclo}</td>
+      <td>${curso.bachillerato === 0 ? "No" : "Si"}</td>
+      
+    </tr>
+    `;
   }
 };
 
@@ -51,12 +48,10 @@ const cursosParaMatricular = (seleccionados, noAprobados) => {
 };
 
 btn_estado.addEventListener("click", () => {
-  const seleccionados = document.querySelectorAll(
-    "input[type=checkbox]:checked"
-  );
+  const seleccionados = document.querySelectorAll(".table-success");
   let codigos = [];
   for (const seleccionado of seleccionados) {
-    codigos.push(seleccionado.value);
+    codigos.push(seleccionado.getAttribute("value"));
   }
   const noAprobados = cursosNoAprobados(cursos, codigos);
   const paraMatriular = cursosParaMatricular(
@@ -76,8 +71,17 @@ btn_estado.addEventListener("click", () => {
   }
 });
 
+function selectRow(e) {
+  e.target.parentElement.classList.toggle("table-success");
+}
+
 const main = () => {
   llenarTabla();
 };
 
 main();
+
+const rowTables = document.querySelectorAll(".row_table");
+for (const rowTable of rowTables) {
+  rowTable.addEventListener("click", selectRow);
+}
